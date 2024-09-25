@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: appTitle,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: appTitle),
@@ -36,6 +36,19 @@ class _MyHomePageState extends State<MyHomePage> {
   final _formKey = GlobalKey<FormState>();
   late String _name;
 
+  _sayHello(BuildContext context) {
+    if (!_formKey.currentState!.validate()) return;
+    _formKey.currentState?.save();
+    showDialog(context: context, builder: (BuildContext context) => AlertDialog(
+    content: MyText('Bonjour, $_name !'),
+    actions: [
+      ElevatedButton(
+    onPressed: () => Navigator.of(context).pop(),
+    child: const MyText('Merci')
+    )
+    ],));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,14 +63,20 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             MyPadding(
                 child: TextFormField(
-                  onSaved: (value) => _name = value.toString(),
+              onSaved: (value) => _name = value.toString(),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return "Veuillez saisir un nom";
+                }
+                return null;
+              },
               decoration: InputDecoration(hintText: "Lucas"),
             )),
             SizedBox(
                 width: double.infinity,
                 child: MyPadding(
                     child: ElevatedButton(
-                        onPressed: () => {},
+                        onPressed: () => _sayHello(context),
                         child: const MyText("Dire Bonjour"))))
           ],
         ),

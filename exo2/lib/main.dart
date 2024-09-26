@@ -37,10 +37,31 @@ class _MyHomePageState extends State<MyHomePage> {
   final _formKey = GlobalKey<FormState>();
   late double _value1;
   late double _value2;
+  late FocusNode _op1Focus;
+
+  @override
+  void initState() {
+    super.initState();
+    _op1Focus = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _op1Focus.dispose();
+    super.dispose();
+  }
 
   _displayResult(String operation) {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => ResultsPage(operation)));
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => ResultsPage(operation)))
+        .then((value) {
+      setState(() {
+        _formKey.currentState?.reset();
+        _op1Focus.requestFocus();
+      });
+    });
   }
 
   String? _operandValidator(value) {
@@ -95,6 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     validator: _operandValidator,
                     style: defaultTextStyle,
                     keyboardType: TextInputType.number,
+                    focusNode: _op1Focus,
                   ),
                 ),
                 SizedBox(

@@ -10,7 +10,7 @@ class HistoryDatabase {
 
   _onCreate(Database db, int version) async {
     await db.execute(
-      'CREATE TABLE entry(id INTEGER PRIMARY KEY AUTOINCREMENT, operation TEXT, date INT'
+      'CREATE TABLE entry(id INTEGER PRIMARY KEY AUTOINCREMENT, operation TEXT, date INT)'
     );
   }
 

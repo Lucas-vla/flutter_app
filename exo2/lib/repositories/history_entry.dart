@@ -2,8 +2,6 @@ import 'package:exo2/database.dart';
 import 'package:exo2/model/history_entry.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'package:exo2/model/history_entry.dart';
-
 class HistoryEntryRepository {
 
     final _tableName = 'entry';

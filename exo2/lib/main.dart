@@ -3,14 +3,16 @@ import 'package:exo2/pages/results.dart';
 import 'package:flutter/material.dart';
 import 'package:exo2/consts.dart';
 import 'package:exo2/components.dart';
-import 'package:exo2/database.dart';
 import 'package:exo2/repositories/history_entry.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:exo2/database.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await HistoryDatabase().open();
+  runApp(const MyApp());
+
 
 }
 
@@ -149,16 +151,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   MySizedBox(
                       child:
-                          ElevatedButton(onPressed: _add, child: MyText("+"))),
+                          ElevatedButton(onPressed: _add, child: const MyText("+"))),
                   MySizedBox(
                       child:
-                          ElevatedButton(onPressed: _sub, child: MyText("-"))),
+                          ElevatedButton(onPressed: _sub, child: const MyText("-"))),
                   MySizedBox(
                       child:
-                          ElevatedButton(onPressed: _mul, child: MyText("*"))),
+                          ElevatedButton(onPressed: _mul, child: const MyText("*"))),
                   MySizedBox(
                       child:
-                          ElevatedButton(onPressed: _div, child: MyText("/"))),
+                          ElevatedButton(onPressed: _div, child: const MyText("/"))),
                 ],
               ),
               Expanded(

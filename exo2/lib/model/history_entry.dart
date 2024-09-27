@@ -1,4 +1,3 @@
-import 'package:path/path.dart';
 
 class HistoryEntry {
   int? id;

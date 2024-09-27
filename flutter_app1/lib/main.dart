@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
                 return null;
               },
-              decoration: InputDecoration(hintText: "Lucas"),
+              decoration: const InputDecoration(hintText: "Lucas"),
             )),
             SizedBox(
                 width: double.infinity,

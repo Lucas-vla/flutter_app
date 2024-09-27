@@ -5,7 +5,8 @@ import 'package:exo2/consts.dart';
 import 'package:exo2/components.dart';
 import 'package:exo2/database.dart';
 import 'package:exo2/repositories/history_entry.dart';
-import 'package:intl/date_symbol_data_http_request.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,18 +42,21 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late Future<List<HistoryEntry>> _history;
-  late final DateFormat _dateTimeFormat;
   final _formKey = GlobalKey<FormState>();
   late double _value1;
   late double _value2;
   late FocusNode _op1Focus;
+  late final DateFormat _dateTimeFormat;
 
   @override
   void initState() {
     super.initState();
+    initializeDateFormatting().then((value) =>
+        _dateTimeFormat = DateFormat.yMd('fr').add_jm()
+    );
+    _history = widget.repository.getAll();
     _op1Focus = FocusNode();
-    initializeDateFormatting()
-  }
+     }
 
   @override
   void dispose() {
@@ -70,6 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _formKey.currentState?.reset();
         _op1Focus.requestFocus();
+        _history = widget.repository.getAll();
       });
     });
   }
@@ -155,7 +160,27 @@ class _MyHomePageState extends State<MyHomePage> {
                       child:
                           ElevatedButton(onPressed: _div, child: MyText("/"))),
                 ],
-              )
+              ),
+              Expanded(
+                  child:
+                      FutureBuilder(
+                          future: _history,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              final data = snapshot.data!;
+                              return ListView.builder(
+                                  padding: defaultPadding,
+                                  itemCount: data.length,
+                                  itemBuilder: (context, index) =>
+                                      MyText('${_dateTimeFormat.format(data[index].date)} : ${data[index].operation}')
+                              );
+                            } else {
+                              return const Text('Chargement...');
+                            }
+                          }
+                      )
+                  )
+
             ])));
   }
 }

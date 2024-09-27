@@ -1,10 +1,16 @@
+import 'package:exo2/model/history_entry.dart';
 import 'package:exo2/pages/results.dart';
 import 'package:flutter/material.dart';
 import 'package:exo2/consts.dart';
 import 'package:exo2/components.dart';
+import 'package:exo2/database.dart';
+import 'package:exo2/repositories/history_entry.dart';
+import 'package:intl/date_symbol_data_http_request.dart';
 
 void main() {
   runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+
 }
 
 class MyApp extends StatelessWidget {
@@ -19,14 +25,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
+  MyHomePage({super.key, required this.title});
+  final repository = HistoryEntryRepository();
   final String title;
 
   @override
@@ -34,6 +40,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late Future<List<HistoryEntry>> _history;
+  late final DateFormat _dateTimeFormat;
   final _formKey = GlobalKey<FormState>();
   late double _value1;
   late double _value2;
@@ -43,6 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _op1Focus = FocusNode();
+    initializeDateFormatting()
   }
 
   @override
@@ -51,7 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  _displayResult(String operation) {
+  _displayResult(operation) {
+    widget.repository.insert(HistoryEntry(operation));
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => ResultsPage(operation)));
     Navigator.of(context)
